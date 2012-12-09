@@ -17,9 +17,21 @@ type Path struct {
 	Index int
 }
 
-// Parse writes the content for the given XPath from the URL to a writer
+type Config struct {
+	Client *http.Client
+}
+
+var DefaultConfig = &Config{
+	Client: &http.Client{},
+}
+
 func Parse(w io.Writer, url, xpath string) {
-	r, err := http.Get(url)
+	DefaultConfig.Parse(w, url, xpath)
+}
+
+// Parse writes the content for the given XPath from the URL to a writer
+func (conf *Config) Parse(w io.Writer, url, xpath string) {
+	r, err := conf.Client.Get(url)
 	if err != nil {
 		fmt.Printf("%v", err)
 		return
