@@ -25,12 +25,21 @@ var DefaultConfig = &Config{
 	Client: &http.Client{},
 }
 
-func Parse(w io.Writer, url, xpath string) {
-	DefaultConfig.Parse(w, url, xpath)
+func Parse(w io.Writer, url string, xpath string) {
+	DefaultConfig.ParseMuliple(w, url, []string{xpath})
+}
+
+func ParseMuliple(w io.Writer, url string, xpath []string) {
+	DefaultConfig.ParseMuliple(w, url, xpath)
 }
 
 // Parse writes the content for the given XPath from the URL to a writer
-func (conf *Config) Parse(w io.Writer, url, xpath string) {
+func (conf *Config) Parse(w io.Writer, url string, xpath string) {
+	ParseMuliple(w, url, []string{xpath})
+}
+
+// Parse writes the content for the given XPath from the URL to a writer
+func (conf *Config) ParseMuliple(w io.Writer, url string, xpath []string) {
 	r, err := conf.Client.Get(url)
 	if err != nil {
 		fmt.Printf("%v", err)
@@ -49,10 +58,10 @@ func (conf *Config) Parse(w io.Writer, url, xpath string) {
 		log.Fatal(err)
 		return
 	}
-
-	c := parseXpath(doc, xpath)
-
-	html.Render(w, c)
+	for _, p := range xpath {
+		c := parseXpath(doc, p)
+		html.Render(w, c)
+	}
 }
 
 func parseXpath(n *html.Node, xpath string) *html.Node {
