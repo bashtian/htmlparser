@@ -26,20 +26,20 @@ var DefaultConfig = &Config{
 }
 
 func Parse(w io.Writer, url string, xpath string) {
-	DefaultConfig.ParseMuliple(w, url, []string{xpath})
+	DefaultConfig.ParseMulti(w, url, []string{xpath})
 }
 
-func ParseMuliple(w io.Writer, url string, xpath []string) {
-	DefaultConfig.ParseMuliple(w, url, xpath)
+func ParseMulti(w io.Writer, url string, xpath []string) {
+	DefaultConfig.ParseMulti(w, url, xpath)
 }
 
 // Parse writes the content for the given XPath from the URL to a writer
 func (conf *Config) Parse(w io.Writer, url string, xpath string) {
-	ParseMuliple(w, url, []string{xpath})
+	ParseMulti(w, url, []string{xpath})
 }
 
 // Parse writes the content for the given XPath from the URL to a writer
-func (conf *Config) ParseMuliple(w io.Writer, url string, xpath []string) {
+func (conf *Config) ParseMulti(w io.Writer, url string, xpath []string) {
 	r, err := conf.Client.Get(url)
 	if err != nil {
 		fmt.Printf("%v", err)
